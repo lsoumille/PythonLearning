@@ -71,7 +71,32 @@ def main():
         server_loop()
 
 def client_sender(buffer):
-    print "ToDO"
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        client.connect((target, port))
+
+        while True:
+            # send buffer
+            if len(buffer):
+                client.send("buffer")
+
+            recv_len = 1
+            response = ""
+            #Process response
+            while recv_len:
+                data = client.recv(4096)
+                recv_len = len(data)
+                response += data
+                if recv_len < 4096:
+                    break
+
+            print response
+            #fulfill the buffer with the new data from the client
+            buffer = raw_input("")
+            buffer += "\n"
+    except:
+        print "[*] Exiting."
+        client.close()
 
 def server_loop():
     print "ToDO"

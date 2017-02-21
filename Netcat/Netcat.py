@@ -48,7 +48,7 @@ def main():
     for o,a in opts:
         if o in ("-h", "--help"):
             usage()
-        elif o in ("l", "--listen"):
+        elif o in ("-l", "--listen"):
             listen = True
         elif o in ("-e", "--execute"):
             execute = a
@@ -56,6 +56,8 @@ def main():
             command = True
         elif o in ("-u", "--upload"):
             upload_destination = a
+        elif o in ("-t", "--target"):
+            target = a
         elif o in ("-p", "--port"):
             port = int(a)
         else:
@@ -75,10 +77,11 @@ def client_sender(buffer):
     try:
         client.connect((target, port))
 
+        # send buffer
+        if len(buffer):
+            client.send(buffer)
+
         while True:
-            # send buffer
-            if len(buffer):
-                client.send("buffer")
 
             recv_len = 1
             response = ""
@@ -94,6 +97,7 @@ def client_sender(buffer):
             #fulfill the buffer with the new data from the client
             buffer = raw_input("")
             buffer += "\n"
+            client.send(buffer)
     except:
         print "[*] Exiting."
         client.close()
@@ -156,7 +160,7 @@ def client_handler(client_socket):
     #Need to emulate a shell
     if command:
         while True:
-            client_socket.send("$>")
+            client_socket.send("$> ")
             cmd_buffer = ""
             #get the cmd
             while "\n" not in cmd_buffer:

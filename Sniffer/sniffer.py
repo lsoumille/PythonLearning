@@ -2,7 +2,7 @@ import socket
 import os
 
 #Network interface
-host = "192.168.2.2"
+host = "192.168.1.12"
 
 #Create socket
 if os.name == "nt":
